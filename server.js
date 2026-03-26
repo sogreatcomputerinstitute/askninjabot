@@ -18,21 +18,15 @@ const MAIN_CHANNEL = "@askninja";
 
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
-const db = new Low(new JSONFile("db.json"));
+const db = new Low(
+  new JSONFile("db.json"),
+  { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} } // Default data required
+);
 
 async function initDB() {
   await db.read();
-  db.data ||= {
-    vip: [],
-    vipKeys: [],
-    users: {},
-    leaderboard: {},
-    vipChannels: {}
-  };
   await db.write();
 }
-initDB();
-
 // ================== GEMINI ==================
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
