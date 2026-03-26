@@ -1,0 +1,21 @@
+{
+  "name": "ask_ninja_bot",
+  "version": "1.0.0",
+  "description": "A Telegram powered with ai",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Brian Akata",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.13.6",
+    "cheerio": "^1.2.0",
+    "lowdb": "^7.0.1",
+    "node-cron": "^4.2.1",
+    "node-telegram-bot-api": "^0.67.0",
+    "sharp": "^0.34.5"
+  }
+}
