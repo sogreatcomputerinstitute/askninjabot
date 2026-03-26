@@ -4,7 +4,8 @@
 
 const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
-const { Low, JSONFile } = require("lowdb");
+const { Low } = require("lowdb");
+const { JSONFile } = require("lowdb/node");
 const sharp = require("sharp");
 const fs = require("fs");
 const axios = require("axios");
