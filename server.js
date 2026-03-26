@@ -9,13 +9,14 @@ const { JSONFile } = require("lowdb/node");
 const sharp = require("sharp");
 const fs = require("fs");
 const axios = require("axios");
+const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // ================== CONFIG ==================
 const TOKEN = "8672407668:AAEa5IMAS4oXdu1zlK4pGyYxMSpR_6HupHU";
 const GEMINI_KEY = "AIzaSyDKoX-GHbEcbLREc5DyaVLC5seX8XkeVpQ";
 const MAIN_CHANNEL = "@askninja";
-
+const app = express();
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
 const db = new Low(
@@ -382,4 +383,5 @@ async function forwardToVIPChannels(message, extraOptions = {}) {
 }
 
 // ================== START ==================
+app.listen(3000);
 console.log("🚀 BOT RUNNING");
