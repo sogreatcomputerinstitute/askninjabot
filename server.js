@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 });
 // ================== GEMINI ==================
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
 async function ai(prompt) {
   const res = await model.generateContent(prompt);
