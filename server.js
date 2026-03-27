@@ -159,6 +159,7 @@ ${msg.text}
 
     } catch (e) {
         bot.sendMessage(id, "⚠️ AI error, please try again.", e);
+      console.log(e);
     }
 }); 
 
