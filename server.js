@@ -14,7 +14,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // ================== CONFIG ==================
 const TOKEN = "8672407668:AAEa5IMAS4oXdu1zlK4pGyYxMSpR_6HupHU";
-const GEMINI_KEY = "AIzaSyDKoX-GHbEcbLREc5DyaVLC5seX8XkeVpQ";
+const GEMINI_KEY = "AIzaSyCKvjHv7g0VCuOAbsXu6pFV96CpE6KKwpY";
 const MAIN_CHANNEL = "@askninja";
 const app = express();
 // ================== INIT ==================
