@@ -19,14 +19,21 @@ const MAIN_CHANNEL = "@askninja";
 const app = express();
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
-const db = new Low(
-  new JSONFile("db.json"),
-  { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} } // Default data required
-);
+const adapter = new JSONFile("db.json");
+const db = new Low(adapter, { 
+    vip: [], 
+    vipKeys: [], 
+    users: {}, 
+    leaderboard: {}, 
+    vipChannels: {} 
+});
 
 async function initDB() {
-  await db.read();
-  await db.write();
+    await db.read();
+    // Ensure nested objects exist if file was empty
+    db.data ||= { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
+    await db.write();
+    console.log("📂 Database Synced");
 }
 
 app.get("/", (req, res) => {
@@ -34,11 +41,11 @@ app.get("/", (req, res) => {
 });
 // ================== GEMINI ==================
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function ai(prompt) {
   const res = await model.generateContent(prompt);
-  const text = await res.response.text();
+  const text = res.response.text();
   return text;
 }
 
