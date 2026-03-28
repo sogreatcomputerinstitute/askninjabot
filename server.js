@@ -15,7 +15,7 @@ require('dotenv').config(); // LOAD THE VAULT FIRST
 
 // ================== CONFIG ==================
 const TOKEN = process.env.TOKEN
-const GEMINI_KEY = process.env.GEMINI
+const GEMINI_KEY = process.env.GEMINI_KEY
 const MAIN_CHANNEL = "@askninja";
 const app = express();
 // ================== INIT ==================
