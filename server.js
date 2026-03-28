@@ -34,12 +34,18 @@ async function initDB() {
     db.data ||= { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
     await db.write();
     console.log("📂 Database Synced");
+
+    async function listModels() {
+    const models = await genAI.listModels();
+    console.log("AVAILABLE_MODELS:", models);
+}
+// Call this inside your initDB to see the list in your console
 }
 
 
 // ================== GEMINI ==================
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
 async function ai(prompt) {
   const res = await model.generateContent(prompt);
