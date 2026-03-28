@@ -36,9 +36,7 @@ async function initDB() {
     console.log("📂 Database Synced");
 }
 
-app.get("/", (req, res) => {
-  res.send("Bot is alive 🚀");
-});
+
 // ================== GEMINI ==================
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -49,6 +47,11 @@ async function ai(prompt) {
   return text;
 }
 
+//============== PING ================
+app.get("/", (req, res) => {
+   const text = ai("Give me a brief info about yourself with more that 200 characters");
+  res.send(text);
+});
 // ================== HELPERS ==================
 function isVIP(id) {
   return db.data.vip.includes(id);
