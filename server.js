@@ -11,10 +11,11 @@ const fs = require("fs");
 const axios = require("axios");
 const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+require('dotenv').config(); // LOAD THE VAULT FIRST
 
 // ================== CONFIG ==================
-const TOKEN = "8672407668:AAEa5IMAS4oXdu1zlK4pGyYxMSpR_6HupHU";
-const GEMINI_KEY = "AIzaSyCKvjHv7g0VCuOAbsXu6pFV96CpE6KKwpY";
+const TOKEN = process.env.TOKEN
+const GEMINI_KEY = process.env.GEMINI
 const MAIN_CHANNEL = "@askninja";
 const app = express();
 // ================== INIT ==================
