@@ -45,25 +45,14 @@ initDB(); // Don't forget to call it
 // ================== GEMINI ==================
 async function ai(prompt) {
   try {
-    // Initialize the SDK with your API Key
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-
-    // Get the specific model instance
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    // Generate content based on the prompt
     const result = await model.generateContent(prompt);
-    
-    // Extract and return the text from the response object
     const response = await result.response;
     return response.text();
-    
   } catch (error) {
     console.error("Gemini API Error:", error.message);
-    throw new Error("Failed to retrieve response from Gemini.");
+    return "⚠️ I'm having trouble thinking right now. Please try again.";
   }
 }
-
 //============== PING ================
 app.get("/", (req, res) => {
    (async () => {
