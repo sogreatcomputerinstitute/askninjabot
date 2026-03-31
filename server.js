@@ -18,6 +18,7 @@ const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
 const MAIN_CHANNEL = "@askninja";
 const app = express();
+app.use(express.json());
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
 const adapter = new JSONFile("db.json");
@@ -28,6 +29,27 @@ const db = new Low(adapter, {
     leaderboard: {}, 
     vipChannels: {} 
 });
+
+async function askGemini(prompt) {
+  try {
+    // Initialize the SDK with your API Key
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+
+    // Get the specific model instance
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Generate content based on the prompt
+    const result = await model.generateContent(prompt);
+    
+    // Extract and return the text from the response object
+    const response = await result.response;
+    return response.text();
+    
+  } catch (error) {
+    console.error("Gemini API Error:", error.message);
+    throw new Error("Failed to retrieve response from Gemini.");
+  }
+}
 
 async function initDB() {
     await db.read();
@@ -45,19 +67,35 @@ async function initDB() {
 
 
 // ================== GEMINI ==================
-const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
 async function ai(prompt) {
-  const res = await model.generateContent(prompt);
-  const text = res.response.text();
-  return text;
+  try {
+    // Initialize the SDK with your API Key
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+
+    // Get the specific model instance
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Generate content based on the prompt
+    const result = await model.generateContent(prompt);
+    
+    // Extract and return the text from the response object
+    const response = await result.response;
+    return response.text();
+    
+  } catch (error) {
+    console.error("Gemini API Error:", error.message);
+    throw new Error("Failed to retrieve response from Gemini.");
+  }
 }
 
 //============== PING ================
 app.get("/", (req, res) => {
-   const text = ai("Give me a brief info about yourself with more that 200 characters");
-  res.send(text);
+   (async () => {
+  const myPrompt = "What are the benefits of using Node.js for AI integrations?";
+  const aiResponse = await askGemini(myPrompt);
+  res.send(aiResponse);
+})();
+  
 });
 // ================== HELPERS ==================
 function isVIP(id) {
