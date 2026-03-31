@@ -61,27 +61,16 @@ async function saveToGist() {
 // ===================== END OF CONFIG =================
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
-const adapter = new JSONFile("db.json");
-const db = new Low(adapter, { 
-    vip: [], 
-    vipKeys: [], 
-    users: {}, 
-    leaderboard: {}, 
-    vipChannels: {} 
-});
 
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 
 const model = genAI.getGenerativeModel({ 
     model: "gemini-2.5-flash",
-    systemInstruction: "You are ASK NINJA AI. Respond in PLAIN TEXT only. No asterisks, no markdown." 
+    systemInstruction: "You are ASK NINJA AI, Made by Prof. Brian Akata. Respond in PLAIN TEXT only. No asterisks, no markdown." 
 });
-
 async function initDB() {
-    await db.read();
-    db.data ||= { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
-    await db.write();
+    await syncFromGist();
     console.log("📂 Database Synced");
 }
 initDB(); // Don't forget to call it
