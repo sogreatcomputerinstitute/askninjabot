@@ -32,8 +32,10 @@ const db = new Low(adapter, {
 
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash });
-
+const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash",
+    systemInstruction: "You are ASK NINJA AI. Your responses must be in PLAIN TEXT ONLY. Never use asterisks (*) for bolding or lists. Never use markdown formatting. Use plain capital letters for emphasis if needed." 
+});
 async function initDB() {
     await db.read();
     db.data ||= { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
@@ -47,7 +49,10 @@ async function ai(prompt) {
   try {
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    return response.text();
+   let text = response.text();
+
+    // Clean up any accidental asterisks just in case
+    return text.replace(/\*/g, "");
   } catch (error) {
     console.error("Gemini API Error:", error.message);
     return "⚠️ I'm having trouble thinking right now. Please try again.";
