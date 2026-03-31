@@ -1,6 +1,6 @@
 // ================== ASK NINJA ULTIMATE BOT ==================
 // Install:
-// npm install node-telegram-bot-api lowdb node-cron axios sharp @google/generative-ai
+// npm install node-telegram-bot-api lowdb node-cron axios sharp @google/generative-ai@latest
 
 const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
@@ -46,7 +46,7 @@ async function initDB() {
 
 // ================== GEMINI ==================
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function ai(prompt) {
   const res = await model.generateContent(prompt);
