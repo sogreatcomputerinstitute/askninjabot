@@ -30,41 +30,17 @@ const db = new Low(adapter, {
     vipChannels: {} 
 });
 
-async function askGemini(prompt) {
-  try {
-    // Initialize the SDK with your API Key
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-
-    // Get the specific model instance
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    // Generate content based on the prompt
-    const result = await model.generateContent(prompt);
-    
-    // Extract and return the text from the response object
-    const response = await result.response;
-    return response.text();
-    
-  } catch (error) {
-    console.error("Gemini API Error:", error.message);
-    throw new Error("Failed to retrieve response from Gemini.");
-  }
-}
+// 1. Initialize Gemini globally so 'model' is accessible everywhere
+const genAI = new GoogleGenerativeAI(GEMINI_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function initDB() {
     await db.read();
-    // Ensure nested objects exist if file was empty
     db.data ||= { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
     await db.write();
     console.log("📂 Database Synced");
-
-    async function listModels() {
-    const models = await genAI.listModels();
-    console.log("AVAILABLE_MODELS:", models);
 }
-// Call this inside your initDB to see the list in your console
-}
-
+initDB(); // Don't forget to call it
 
 // ================== GEMINI ==================
 async function ai(prompt) {
