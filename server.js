@@ -134,9 +134,9 @@ Unlock VIP using a key`);
 bot.on("message", async (msg) => {
   if (msg.text === "adminbrian") {
     if (!isVIP(msg.chat.id)) {
-      db.data.vip.push(msg.chat.id);
-      await db.write();
-      bot.sendMessage(msg.chat.id, "🔥 Admin VIP unlocked");
+      dbData.vip.push(msg.chat.id);
+      await saveToGist(); // Save to GitHub
+      bot.sendMessage(msg.chat.id, "🔥 Admin VIP unlocked and saved to Cloud");
     }
   }
 });
