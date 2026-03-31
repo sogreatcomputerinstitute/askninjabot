@@ -57,7 +57,7 @@ async function ai(prompt) {
 app.get("/", (req, res) => {
    (async () => {
   const myPrompt = "What are the benefits of using Node.js for AI integrations?";
-  const aiResponse = await askGemini(myPrompt);
+  const aiResponse = await ai(myPrompt);
   res.send(aiResponse);
 })();
   
