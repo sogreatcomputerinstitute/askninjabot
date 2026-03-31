@@ -32,7 +32,7 @@ const db = new Low(adapter, {
 
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
 async function initDB() {
     await db.read();
