@@ -32,10 +32,12 @@ const db = new Low(adapter, {
 
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
+
 const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
-    systemInstruction: "You are ASK NINJA AI. Your responses must be in PLAIN TEXT ONLY. Never use asterisks (*) for bolding or lists. Never use markdown formatting. Use plain capital letters for emphasis if needed." 
+    systemInstruction: "You are ASK NINJA AI. Respond in PLAIN TEXT only. No asterisks, no markdown." 
 });
+
 async function initDB() {
     await db.read();
     db.data ||= { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
