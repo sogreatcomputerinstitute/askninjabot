@@ -13,12 +13,52 @@ const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config(); // LOAD THE VAULT FIRST
 
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GIST_ID = process.env.GIST_ID;
+
 // ================== CONFIG ==================
 const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
 const MAIN_CHANNEL = "@askninja";
 const app = express();
 app.use(express.json());
+
+const gistHeaders = {
+    Authorization: `token ${GITHUB_TOKEN}`,
+    'Accept': 'application/vnd.github.v3+json'
+};
+
+// Global DB object
+let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
+
+// Read from Gist
+async function syncFromGist() {
+    try {
+        const res = await axios.get(`https://api.github.com/gists/${GIST_ID}`, { headers: gistHeaders });
+        const content = res.data.files['db.json'].content;
+        dbData = JSON.parse(content);
+        console.log("✅ DB Synced from GitHub Gist");
+    } catch (e) {
+        console.error("❌ Gist Read Error:", e.message);
+    }
+}
+
+// Write to Gist
+async function saveToGist() {
+    try {
+        await axios.patch(`https://api.github.com/gists/${GIST_ID}`, {
+            files: {
+                'db.json': {
+                    content: JSON.stringify(dbData, null, 2)
+                }
+            }
+        }, { headers: gistHeaders });
+        console.log("💾 DB Saved to GitHub Gist");
+    } catch (e) {
+        console.error("❌ Gist Write Error:", e.message);
+    }
+}
+// ===================== END OF CONFIG =================
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
 const adapter = new JSONFile("db.json");
