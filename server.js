@@ -34,7 +34,7 @@ const db = new Low(adapter, {
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 
 const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     systemInstruction: "You are ASK NINJA AI. Respond in PLAIN TEXT only. No asterisks, no markdown." 
 });
 
