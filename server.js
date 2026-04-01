@@ -147,6 +147,7 @@ async function ai(prompt) {
 //============== PING ================
 app.get("/", (req, res) => {
    (async () => {
+       await saveToGist();
   const myPrompt = "What are the benefits of using Node.js for AI integrations?";
   const aiResponse = await ai(myPrompt);
   res.send(aiResponse);
