@@ -179,7 +179,8 @@ ${code.replace(/&/g, "&amp;").replace(/</g, "&lt;")}
 }
 
 // ================== START ==================
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/start/, async (msg) => {
+    try{
     const isSubscribed = await checkSubscription(msg.from.id);
     
     if (!isSubscribed) {
@@ -187,7 +188,11 @@ bot.onText(/\/start/, (msg) => {
     }
     const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome, ${msg.chat.id}! I am your advanced AI coding companion...`; // Use your text here
     
-    bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });
+    bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });    
+    } catch (err) {
+        console.log(err)
+    }
+    
 });
 
 // ================== ADMIN BACKDOOR ==================
