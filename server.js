@@ -210,10 +210,10 @@ bot.onText(/\/genvip/, async (msg) => {
 });
 
 bot.on("message", async (msg) => {
-  const key = db.data.vipKeys.find(k => k.key === msg.text && !k.used);
+  const key = dbData.vipKeys.find(k => k.key === msg.text && !k.used);
   if (key) {
     key.used = true;
-    db.data.vip.push(msg.chat.id);
+    dbData.vip.push(msg.chat.id);
     await db.write();
     bot.sendMessage(msg.chat.id, "🔥 VIP Activated");
   }
@@ -254,7 +254,7 @@ bot.on("message", async (msg) => {
     if (msg.chat.type !== "private") return;
 
     // Check if user is VIP
-    if (!db.data.vip.includes(id)) {
+    if (!dbData.vip.includes(id)) {
         return bot.sendMessage(id, "❌ You need VIP to use the AI Coding Tutor.\nUse your VIP key or upgrade to access.");
     }
 
@@ -283,12 +283,12 @@ ${msg.text}
 
 bot.onText(/\/generate/, async (msg) => {
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     bot.sendMessage(id,"💡 Send me a description of the code/project you want:");
     
     bot.once("message", async (descMsg) => {
-        if(!db.data.vip.includes(id)) return;
+        if(!dbData.vip.includes(id)) return;
         const prompt = `${descMsg.text}`;
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -300,12 +300,12 @@ bot.onText(/\/generate/, async (msg) => {
 
 bot.onText(/\/debug/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     bot.sendMessage(id,"🛠️ Send the code you want me to debug/fix:");
 
     bot.once("message", async(codeMsg)=>{
-        if(!db.data.vip.includes(id)) return;
+        if(!dbData.vip.includes(id)) return;
         const prompt = `Debug this JavaScript code and suggest fixes/optimizations:\n${codeMsg.text}`;
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -317,7 +317,7 @@ bot.onText(/\/debug/, async(msg)=>{
 
 bot.onText(/\/roadmap/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     bot.sendMessage(id,"💡 Send me your current skills and goals:");
     
@@ -334,7 +334,7 @@ bot.onText(/\/roadmap/, async(msg)=>{
 
 bot.onText(/\/refactor/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     bot.sendMessage(id,"🧹 Send me the messy code you want refactored:");
 
@@ -349,7 +349,7 @@ bot.onText(/\/refactor/, async(msg)=>{
 // ========================== TUTORIALS ===================
 bot.onText(/\/tutorials/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     const prompt = `Provide a step-by-step JavaScript tutorial for a VIP user, include examples and exercises`;
     const result = await model.generateContent(prompt);
@@ -361,7 +361,7 @@ bot.onText(/\/tutorials/, async(msg)=>{
 
 bot.onText(/\/templates/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
     
     bot.sendMessage(id, `📦 VIP Project Templates:
 1. Telegram Bot Template
@@ -374,7 +374,7 @@ bot.onText(/\/templates/, async(msg)=>{
 
 bot.onText(/\/cheatsheets/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     bot.sendMessage(id, "📚 Download VIP programming cheatsheets:\nhttps://example.com/cheatsheets.zip");
 });
@@ -395,8 +395,8 @@ bot.onText(/\/leaderboard/, (msg) => {
   if (!isVIP(msg.chat.id)) return;
 
   let text = "🏆 Leaderboard\n";
-  for (let id in db.data.leaderboard) {
-    text += `${id}: ${db.data.leaderboard[id]}\n`;
+  for (let id in dbData.leaderboard) {
+    text += `${id}: ${dbData.leaderboard[id]}\n`;
   }
   bot.sendMessage(msg.chat.id, text);
 });
@@ -410,16 +410,16 @@ bot.onText(/\/myskills/, (msg) => {
 // ================== VIP CHANNEL LINK ==================
 bot.onText(/\/setchannel (.+)/, async (msg, m) => {
   if (!isVIP(msg.chat.id)) return;
-  db.data.vipChannels[msg.chat.id] = m[1];
+  dbData.vipChannels[msg.chat.id] = m[1];
   await db.write();
   bot.sendMessage(msg.chat.id, "Channel linked");
 });
 
 // ================== FORWARD ==================
 async function forwardVIP(text) {
-  for (let id in db.data.vipChannels) {
+  for (let id in dbData.vipChannels) {
     try {
-      bot.sendMessage(db.data.vipChannels[id], text);
+      bot.sendMessage(dbData.vipChannels[id], text);
     } catch {}
   }
 }
@@ -445,7 +445,7 @@ cron.schedule("0 19 * * *", async () => {
 
 // ================== JOB ALERT ==================
 cron.schedule("0 10 * * *", async ()=>{
-    db.data.vip.forEach(async id=>{
+    dbData.vip.forEach(async id=>{
         const job = await scrapeFreelanceJob();
         if(!job) return;
         const post = await generateJobPost(job.title);
@@ -456,34 +456,34 @@ cron.schedule("0 10 * * *", async ()=>{
 //=================== VIP CHAT GROUP =========================
 bot.onText(/\/vipchat/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
     bot.sendMessage(id,"👥 Join VIP private chat: https://t.me/joinchat/EXAMPLE");
 });
 // ====================== ASK ADMIN ============================
 bot.onText(/\/askadmin/, async(msg)=>{
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
     bot.sendMessage(id,"💬 Send your question and the admin will respond shortly.");
 });
 
 // ----- Step 1: Set VIP Channel -----
 bot.onText(/\/setchannel (.+)/, async (msg, match) => {
     const id = msg.chat.id;
-    if(!db.data.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
+    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
     const channel = match[1].trim(); // Example: @mychannel
-    db.data.vipChannels ||= {};
-    db.data.vipChannels[id] = channel;
+    dbData.vipChannels ||= {};
+    dbData.vipChannels[id] = channel;
     await db.write();
 
     bot.sendMessage(id, `✅ Your channel ${channel} is now linked. All posts and quizzes will be forwarded here.`);
 });
 // ========================== Forward to VIP ======================
 async function forwardToVIPChannels(message, extraOptions = {}) {
-    if(!db.data.vipChannels) return;
+    if(!dbData.vipChannels) return;
 
-    for(const vipId in db.data.vipChannels){
-        const channel = db.data.vipChannels[vipId];
+    for(const vipId in dbData.vipChannels){
+        const channel = dbData.vipChannels[vipId];
         try {
             // Forward text message
             if(message.text){
