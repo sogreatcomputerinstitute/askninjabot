@@ -17,6 +17,12 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GIST_ID = process.env.GIST_ID;
 
 // ================== INIT ==================
+const TOKEN = process.env.TOKEN
+const GEMINI_KEY = process.env.GEMINI_KEY
+const MAIN_CHANNEL = "@askninja";
+const app = express();
+app.use(express.json());
+
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
@@ -48,11 +54,6 @@ async function ai(prompt) {
 
 
 // ================== CONFIG ==================
-const TOKEN = process.env.TOKEN
-const GEMINI_KEY = process.env.GEMINI_KEY
-const MAIN_CHANNEL = "@askninja";
-const app = express();
-app.use(express.json());
 
 const gistHeaders = {
     Authorization: `token ${GITHUB_TOKEN}`,
