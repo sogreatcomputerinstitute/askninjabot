@@ -58,6 +58,62 @@ async function saveToGist() {
         console.error("❌ Gist Write Error:", e.message);
     }
 }
+// Check User Subscription
+async function checkSubscription(userId) {
+    try {
+        const member = await bot.getChatMember(MAIN_CHANNEL, userId);
+        const allowedStatuses = ["member", "administrator", "creator"];
+        return allowedStatuses.includes(member.status);
+    } catch (error) {
+        console.error("Subscription Check Error:", error.message);
+        // If the bot isn't an admin in the channel, this will fail.
+        return false; 
+    }
+}
+// Subscription Message
+// Function to send the "Join Channel" message
+async function sendJoinMessage(chatId) {
+    const opts = {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: "📢 Join Channel", url: `https://t.me/${MAIN_CHANNEL.replace('@', '')}` }
+                ],
+                [
+                    { text: "✅ Verify Subscription", callback_data: "check_sub" }
+                ]
+            ]
+        }
+    };
+    bot.sendMessage(chatId, "❌ You must subscribe to our channel to use this service. Please join and then click verify.", opts);
+}
+
+// Handler for the "Verify" button click
+bot.on("callback_query", async (query) => {
+    const chatId = query.message.chat.id;
+    const userId = query.from.id;
+
+    if (query.data === "check_sub") {
+        const isSubscribed = await checkSubscription(userId);
+
+        if (isSubscribed) {
+            // Edit the original message to show success
+            bot.editMessageText("🎉 Verification Successful! You can now use our service.", {
+                chat_id: chatId,
+                message_id: query.message.message_id
+            });
+            // Answer the callback to remove the loading state on the button
+            bot.answerCallbackQuery(query.id, { text: "Access Granted!" });
+        } else {
+            bot.answerCallbackQuery(query.id, { 
+                text: "❌ You haven't joined yet!", 
+                show_alert: true 
+            });
+        }
+    }
+});
+
+
 // ===================== END OF CONFIG =================
 // ================== INIT ==================
 const bot = new TelegramBot(TOKEN, { polling: true });
@@ -66,7 +122,7 @@ const bot = new TelegramBot(TOKEN, { polling: true });
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 
 const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.5-flash",
+    model: "gemini-2.5-pro",
     systemInstruction: "You are ASK NINJA AI, Made by Prof. Brian Akata. Respond in PLAIN TEXT only. No asterisks, no markdown." 
 });
 async function initDB() {
@@ -123,6 +179,11 @@ ${code.replace(/&/g, "&amp;").replace(/</g, "&lt;")}
 
 // ================== START ==================
 bot.onText(/\/start/, (msg) => {
+    const isSubscribed = await checkSubscription(msg.from.id);
+    
+    if (!isSubscribed) {
+        return sendJoinMessage(msg.chat.id);
+    }
   bot.sendMessage(msg.chat.id,
 `🔥 Welcome to Ask Ninja Bot
 
