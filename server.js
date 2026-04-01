@@ -155,8 +155,8 @@ app.get("/", (req, res) => {
   
 });
 // ================== HELPERS ==================
-function isVIP(id) {
- syncFromGist()
+async function isVIP(id) {
+ await syncFromGist()
   return dbData.data.vip.includes(id);
 }
 
