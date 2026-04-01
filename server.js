@@ -184,11 +184,9 @@ bot.onText(/\/start/, (msg) => {
     if (!isSubscribed) {
         return sendJoinMessage(msg.chat.id);
     }
-  bot.sendMessage(msg.chat.id,
-`🔥 Welcome to Ask Ninja Bot
-
-Use /viptools to see premium features
-Unlock VIP using a key`);
+    const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome, ${msg.chat.id}! I am your advanced AI coding companion...`; // Use your text here
+    
+    bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });
 });
 
 // ================== ADMIN BACKDOOR ==================
