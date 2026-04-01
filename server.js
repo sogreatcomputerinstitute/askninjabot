@@ -16,6 +16,37 @@ require('dotenv').config(); // LOAD THE VAULT FIRST
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GIST_ID = process.env.GIST_ID;
 
+// ================== INIT ==================
+const bot = new TelegramBot(TOKEN, { polling: true });
+
+// 1. Initialize Gemini globally so 'model' is accessible everywhere
+const genAI = new GoogleGenerativeAI(GEMINI_KEY);
+
+const model = genAI.getGenerativeModel({ 
+    model: "gemini-2.5-pro",
+    systemInstruction: "You are ASK NINJA AI, Made by Prof. Brian Akata, Trained and created by Ask Ninja Co-operation. Respond in Markdown with these Instruction Here is a breakdown of the supported formatting: Text Styles Bold: Use **text** or *text*. Italic: Use __text__ or _text_. Underline: Use <u>text</u> (HTML) or __text__ (Markdown). Strikethrough: Use ~text~ or <s>text</s>. Spoiler (Hidden Text): Use ||text||. Monospace (Code): Use `text` for inline or text for blocks. Block Quote: Supported, including expandable quotes"
+});
+async function initDB() {
+    syncFromGist();
+    console.log("📂 Database Synced");
+}
+initDB(); // Don't forget to call it
+
+// ================== GEMINI ==================
+async function ai(prompt) {
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+   let text = response.text();
+
+    return text;
+  } catch (error) {
+    console.error("Gemini API Error:", error.message);
+    return "⚠️ I'm having trouble thinking right now. Please try again.";
+  }
+}
+
+
 // ================== CONFIG ==================
 const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
@@ -115,35 +146,6 @@ bot.on("callback_query", async (query) => {
 
 
 // ===================== END OF CONFIG =================
-// ================== INIT ==================
-const bot = new TelegramBot(TOKEN, { polling: true });
-
-// 1. Initialize Gemini globally so 'model' is accessible everywhere
-const genAI = new GoogleGenerativeAI(GEMINI_KEY);
-
-const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.5-pro",
-    systemInstruction: "You are ASK NINJA AI, Made by Prof. Brian Akata, Trained and created by Ask Ninja Co-operation. Respond in Markdown with these Instruction Here is a breakdown of the supported formatting: Text Styles Bold: Use **text** or *text*. Italic: Use __text__ or _text_. Underline: Use <u>text</u> (HTML) or __text__ (Markdown). Strikethrough: Use ~text~ or <s>text</s>. Spoiler (Hidden Text): Use ||text||. Monospace (Code): Use `text` for inline or text for blocks. Block Quote: Supported, including expandable quotes"
-});
-async function initDB() {
-    syncFromGist();
-    console.log("📂 Database Synced");
-}
-initDB(); // Don't forget to call it
-
-// ================== GEMINI ==================
-async function ai(prompt) {
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-   let text = response.text();
-
-    return text;
-  } catch (error) {
-    console.error("Gemini API Error:", error.message);
-    return "⚠️ I'm having trouble thinking right now. Please try again.";
-  }
-}
 //============== PING ================
 app.get("/", (req, res) => {
    (async () => {
