@@ -156,7 +156,8 @@ app.get("/", (req, res) => {
 });
 // ================== HELPERS ==================
 function isVIP(id) {
-  return db.data.vip.includes(id);
+    await syncFromGist()
+  return dbData.data.vip.includes(id);
 }
 
 // ================== IMAGE GENERATOR ==================
@@ -203,8 +204,8 @@ bot.on("message", async (msg) => {
 // ================== VIP KEYS ==================
 bot.onText(/\/genvip/, async (msg) => {
   const key = "VIP" + Math.random().toString(36).substring(2, 8);
-  db.data.vipKeys.push({ key, used: false });
-  await db.write();
+  dbData.vipKeys.push({ key, used: false });
+  await saveToGist();
   bot.sendMessage(msg.chat.id, "Key: " + key);
 });
 
