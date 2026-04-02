@@ -19,7 +19,7 @@ const GIST_ID = process.env.GIST_ID;
 // ================== INIT ==================
 const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
-const MAIN_CHANNEL = "@askninja";
+const MAIN_CHANNEL = "@ask_ninja";
 const app = express();
 app.use(express.json());
 
