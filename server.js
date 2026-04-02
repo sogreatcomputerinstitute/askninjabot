@@ -25,6 +25,12 @@ app.use(express.json());
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
+const gistHeaders = {
+    Authorization: `token ${GITHUB_TOKEN}`,
+    'Accept': 'application/vnd.github.v3+json'
+};
+
+
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 
@@ -55,10 +61,6 @@ async function ai(prompt) {
 
 // ================== CONFIG ==================
 
-const gistHeaders = {
-    Authorization: `token ${GITHUB_TOKEN}`,
-    'Accept': 'application/vnd.github.v3+json'
-};
 
 // Global DB object
 let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
