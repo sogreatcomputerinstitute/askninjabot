@@ -19,7 +19,7 @@ const GIST_ID = process.env.GIST_ID;
 // ================== INIT ==================
 const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
-const MAIN_CHANNEL = "@ask_ninja";
+const MAIN_CHANNEL = "@askninja";
 const app = express();
 app.use(express.json());
 
@@ -35,7 +35,7 @@ const gistHeaders = {
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 
 const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.5",
+    model: "gemini-2.5-flash",
     systemInstruction: "You are ASK NINJA AI, Made by Prof. Brian Akata, Trained and created by Ask Ninja Co-operation. Respond in Markdown with these Instruction Here is a breakdown of the supported formatting: Text Styles Bold: Use **text** or *text*. Italic: Use __text__ or _text_. Underline: Use <u>text</u> (HTML) or __text__ (Markdown). Strikethrough: Use ~text~ or <s>text</s>. Spoiler (Hidden Text): Use ||text||. Monospace (Code): Use `text` for inline or text for blocks. Block Quote: Supported, including expandable quotes"
 });
 async function initDB() {
