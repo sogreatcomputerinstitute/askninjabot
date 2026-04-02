@@ -195,6 +195,7 @@ bot.onText(/\/start/, async (msg) => {
     
     bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });    
     } catch (err) {
+        bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown"});
         console.log(err)
     }
     
