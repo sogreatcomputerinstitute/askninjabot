@@ -58,9 +58,28 @@ async function ai(prompt) {
   }
 }
 
+async function listAllModels() {
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_KEY}`);
+        const data = await response.json();
+        
+        console.log("--- 🕵️ NINJA MODEL LIST ---");
+        data.models.forEach(m => {
+            // Filter for models that support 'generateContent'
+            if (m.supportedGenerationMethods.includes('generateContent')) {
+                console.log(`Model: ${m.name.split('/')[1]}`);
+                console.log(`Description: ${m.description}`);
+                console.log('---------------------------');
+            }
+        });
+    } catch (e) {
+        console.log("Error fetching list:", e.message);
+    }
+}
+
+listAllModels();
 
 // ================== CONFIG ==================
-
 
 // Global DB object
 let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
