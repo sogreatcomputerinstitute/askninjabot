@@ -182,7 +182,7 @@ app.get("/", (req, res) => {
 // ================== HELPERS ==================
 async function isVIP(id) {
  //await syncFromGist()
-  return dbData.data.vip.includes(id);
+  return dbData.vip.includes(id);
 }
 
 // ================== IMAGE GENERATOR ==================
