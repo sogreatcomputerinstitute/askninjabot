@@ -208,7 +208,6 @@ ${code.replace(/&/g, "&amp;").replace(/</g, "&lt;")}
 
 // ================== START ==================
 bot.onText(/\/start/, async (msg) => {
-    const chatId = query.message.chat.id;
     try{
     const isSubscribed = await checkSubscription(msg.from.id);
     
