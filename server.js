@@ -57,7 +57,7 @@ async function ai(prompt) {
     return text;
   } catch (error) {
     console.error("Gemini API Error:", error.message);
-    return "⚠️ I'm having trouble thinking right now. Please try again.";
+    return "⚠️ An Error Occured please check your network connection and try again.";
   }
 }
 
@@ -175,10 +175,8 @@ async function sendJoinMessage(chatId) {
 //============== PING ================
 app.get("/", (req, res) => {
    (async () => {
-       await saveToGist();
   const myPrompt = "What are the benefits of using Node.js for AI integrations?";
-  const aiResponse = await ai(myPrompt);
-  res.send(aiResponse);
+  res.send(myPrompt);
 })();
   
 });
