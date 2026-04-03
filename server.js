@@ -124,23 +124,6 @@ async function checkSubscription(userId) {
         return false; 
     }
 }
-// Subscription Message
-// Function to send the "Join Channel" message
-async function sendJoinMessage(chatId) {
-    const opts = {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    { text: "📢 Join Channel", url: `https://t.me/${MAIN_CHANNEL.replace('@', '')}` }
-                ],
-                [
-                    { text: "✅ Verify Subscription", callback_data: "check_sub" }
-                ]
-            ]
-        }
-    };
-    bot.sendMessage(chatId, "❌ You must subscribe to our channel to use this service. Please join and then click verify.", opts);
-}
 
 // Handler for the "Verify" button click
 bot.on("callback_query", async (query) => {
@@ -166,6 +149,26 @@ bot.on("callback_query", async (query) => {
         }
     }
 });
+
+
+// Subscription Message
+// Function to send the "Join Channel" message
+async function sendJoinMessage(chatId) {
+    const opts = {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: "📢 Join Channel", url: `https://t.me/${MAIN_CHANNEL.replace('@', '')}` }
+                ],
+                [
+                    { text: "✅ Verify Subscription", callback_data: "check_sub" }
+                ]
+            ]
+        }
+    };
+    bot.sendMessage(chatId, "❌ You must subscribe to our channel to use this service. Please join and then click verify.", opts);
+}
+
 
 
 // ===================== END OF CONFIG =================
