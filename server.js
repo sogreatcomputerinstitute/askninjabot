@@ -25,6 +25,9 @@ app.use(express.json());
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
+// Global DB object
+let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
+
 const gistHeaders = {
     Authorization: `token ${GITHUB_TOKEN}`,
     'Accept': 'application/vnd.github.v3+json'
@@ -81,8 +84,6 @@ listAllModels();
 
 // ================== CONFIG ==================
 
-// Global DB object
-let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
 
 // Read from Gist
 async function syncFromGist() {
