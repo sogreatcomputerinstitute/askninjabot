@@ -251,7 +251,7 @@ bot.on("message", async (msg) => {
   if (key) {
     key.used = true;
     dbData.vip.push(msg.chat.id);
-    await db.write();
+    await saveToGist();
     bot.sendMessage(msg.chat.id, "🔥 VIP Activated");
   }
 });
