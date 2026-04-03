@@ -206,24 +206,29 @@ ${code.replace(/&/g, "&amp;").replace(/</g, "&lt;")}
   return file;
 }
 
-// ================== START ==================
 bot.onText(/\/start/, async (msg) => {
-    try{
-    const isSubscribed = await checkSubscription(msg.from.id);
+    // 1. Define chatId immediately using the msg object
+    const chatId = msg.chat.id; 
     
-    if (!isSubscribed) {
-        return sendJoinMessage(msg.chat.id);
-    }
-    const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome, ${msg.chat.id}! I am your advanced AI coding companion...`; // Use your text here
-    
-    bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });    
-    } catch (err) {
-        bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown"});
-        console.log(err)
-    }
-    
-});
+    try {
+        const isSubscribed = await checkSubscription(msg.from.id);
+        
+        if (!isSubscribed) {
+            return sendJoinMessage(chatId); // Use the variable here
+        }
 
+        const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome, Prof. Brian! I am your advanced AI coding companion...`;
+        
+        // 2. Use 'chatId' (not 'msg.chat.id' or 'chatId' alone if undefined)
+        await bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });   
+        
+    } catch (err) {
+        console.log("Start Error:", err);
+        // 3. Send a simple hardcoded string in the catch block 
+        // to avoid "startMsg is not defined" errors here.
+        bot.sendMessage(chatId, "⚠️ Oops! Something went wrong. Try again in a moment.");
+    }
+});
 // ================== ADMIN BACKDOOR ==================
 bot.on("message", async (msg) => {
   if (msg.text == "adminbrian") {
