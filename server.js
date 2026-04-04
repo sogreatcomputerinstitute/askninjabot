@@ -19,6 +19,15 @@ const GIST_ID = process.env.GIST_ID;
 const reportingUsers = new Set();
 const PROF_BRIAN_ID = 8680817767;
 
+// --- NINJA WISDOM DATA ---
+const quotes = [
+    "Clean code is not written, it is polished. 💎",
+    "A ninja developer masters the debugger before the compiler. 🕵️",
+    "The best error message is the one that never appears. 🥷",
+    "Complexity is the enemy of security. Keep it lean. ⚔️",
+    "First, solve the problem. Then, write the code. 📜"
+];
+
 // ================== INIT ==================
 const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
@@ -708,6 +717,76 @@ bot.onText(/\/report/, (msg) => {
 });
   
 });
+// ======================= FREE SERVICES ===========================
+// --- 1. CODE-SENSEI ---
+bot.onText(/\/sensei/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "🍱 *SENSEI:* Send me the messy code you want me to format!", { parse_mode: 'Markdown' });
+    
+    bot.once('message', (nextMsg) => {
+        if (nextMsg.text.startsWith('/')) return; // Ignore if user types another command
+        const formatted = "```javascript\n" + nextMsg.text + "\n```";
+        bot.sendMessage(chatId, `✨ *FORMATTED BY SENSEI:*\n${formatted}`, { parse_mode: 'MarkdownV2' });
+    });
+});
+
+// --- 2. BUG-BUSTER ---
+bot.onText(/\/bugbuster/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "🕵️ *BUG-BUSTER:* Send me the error log you want to bust!", { parse_mode: 'Markdown' });
+    
+    bot.once('message', (nextMsg) => {
+        if (nextMsg.text.startsWith('/')) return;
+        const lines = nextMsg.text.split('\n');
+        const relevant = lines.filter(l => l.includes('/src/') || l.includes('.js:') || l.includes('Error:'));
+        const cleanLog = "🚨 *ANALYSIS COMPLETE:*\n\n" + relevant.map(l => `📍 \`${l.trim()}\``).join('\n');
+        bot.sendMessage(chatId, cleanLog || "⚠️ *Ninja Report:* No clear source found in that log.", { parse_mode: 'Markdown' });
+    });
+});
+
+// --- 3. TEXT-TO-SLUG ---
+bot.onText(/\/slugger/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "🔗 *SLUGGER:* Send me the text you want to turn into a URL slug!", { parse_mode: 'Markdown' });
+    
+    bot.once('message', (nextMsg) => {
+        if (nextMsg.text.startsWith('/')) return;
+        const slug = nextMsg.text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        bot.sendMessage(chatId, `✅ *GENERATED SLUG:*\n\`${slug}\``, { parse_mode: 'MarkdownV2' });
+    });
+});
+
+// --- 5, 7, 8, 10 (Direct Commands - No second step needed) ---
+bot.onText(/\/check (.+)/, async (msg, match) => {
+    const url = match[1].trim();
+    const target = url.startsWith('http') ? url : `https://${url}`;
+    try {
+        const res = await axios.get(target, { timeout: 5000 });
+        bot.sendMessage(msg.chat.id, `✅ *UP:* ${url} (Status: ${res.status})`, { parse_mode: 'Markdown' });
+    } catch (e) {
+        bot.sendMessage(msg.chat.id, `🚫 *DOWN:* ${url}`, { parse_mode: 'Markdown' });
+    }
+});
+
+bot.onText(/\/time (.+)/, (msg, match) => {
+    const ts = parseInt(match[1]);
+    const date = new Date(ts < 10000000000 ? ts * 1000 : ts);
+    bot.sendMessage(msg.chat.id, `📅 *TIME:* ${date.toUTCString()}`, { parse_mode: 'Markdown' });
+});
+
+bot.onText(/\/repo (.+)/, (msg, match) => {
+    const repo = match[1];
+    const base = `https://github.com/${repo}`;
+    bot.sendMessage(msg.chat.id, `📦 [${repo}](${base})`, { parse_mode: 'Markdown' });
+});
+
+bot.onText(/\/quote/, (msg) => {
+   if (text === '/quote') {
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        return bot.sendMessage(chatId, `🌙 *NINJA WISDOM*\n\n_"${randomQuote}"_`, { parse_mode: 'Markdown' });
+    }
+});
+
 // ================== START ==================
 app.listen(3000);
 console.log("🚀 BOT RUNNING");
