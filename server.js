@@ -563,11 +563,16 @@ bot.onText(/\/myskills/, (msg) => {
 });
 
 // ================== VIP CHANNEL LINK ==================
-bot.onText(/\/setchannel (.+)/, async (msg, m) => {
+bot.onText(/\/setchannel/, async (msg) => {
   if (!isVIP(msg.chat.id)) return;
-  dbData.vipChannels[msg.chat.id] = m[1];
-  await saveToGist();
-  bot.sendMessage(msg.chat.id, "Channel linked");
+  bot.sendMessage(msg.chat.id, "Send Your Channel Link To Get Daily Post!");
+    
+    bot.once('message', (nmsg) => {
+      dbData.vipChannels[msg.chat.id] = m[1];
+      await saveToGist();
+      bot.sendMessage(msg.chat.id, "Channel Linked Please Make The Bot An Admin In /n Your Channel For It To Function Properly!");
+    })
+    
 });
 
 // ================== FORWARD ==================
