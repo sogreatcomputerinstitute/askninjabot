@@ -656,7 +656,8 @@ bot.onText(/\/job/, async(msg) => {
             ]
         }
     };
-        bot.sendMessage(id, `💼 VIP Job:\n${post}\nApply: ${job.link}`, opts); 
+        bot.sendMessage(id, `💼 VIP Job:\n${post}\n`, opts); 
+    return "${posts}, Apply: ${job.link}";
 })
 // ====================== ASK ADMIN ============================
 bot.onText(/\/askadmin/, async(msg)=>{
