@@ -5,12 +5,16 @@
 const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
 const { Low } = require("lowdb");
+
 const { JSONFile } = require("lowdb/node");
 const sharp = require("sharp");
 const fs = require("fs");
+
 const axios = require("axios");
 const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const { generateBrandImage } = require('./imageEngine.js');
 require('dotenv').config(); // LOAD THE VAULT FIRST
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -283,15 +287,18 @@ bot.onText(/\/start/, async (msg) => {
     
     try {
         const isSubscribed = await checkSubscription(msg.from.id);
+        const imageBuffer = await generateBrandImage("Welcome To Ask Ninja Bot!");
         
         if (!isSubscribed) {
             return sendJoinMessage(chatId); // Use the variable here
         }
 
-        const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome, Prof. Brian! I am your advanced AI coding companion...`;
+        const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome To, Ask Ninja! I am your advanced AI coding companion...`;
         
-        // 2. Use 'chatId' (not 'msg.chat.id' or 'chatId' alone if undefined)
-        await bot.sendMessage(chatId, startMsg, { parse_mode: "Markdown" });   
+        await bot.sendPhoto(chatId, imageBuffer, {
+            caption: startMsg,
+            parse_mode: 'Markdown'
+        });
         
     } catch (err) {
         console.log("Start Error:", err);
