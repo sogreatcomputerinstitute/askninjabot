@@ -614,6 +614,23 @@ bot.onText(/\/vipchat/, async(msg)=>{
     if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
     bot.sendMessage(id,"👥 Join VIP private chat: https://t.me/joinchat/EXAMPLE");
 });
+// ==================== GET JOB ==============================
+bot.onText(/\/job/, async(msg) => {
+    const id = msg.chat.id;
+     const job = await scrapeFreelanceJob();
+        if(!job) return;
+        const post = await generateJobPost(job.title);
+         const opts = {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: "Link To Job!", url: `${job.link}` }
+                ],
+            ]
+        }
+    };
+        bot.sendMessage(id, `💼 VIP Job:\n${post}\nApply: ${job.link}`, opts); 
+})
 // ====================== ASK ADMIN ============================
 bot.onText(/\/askadmin/, async(msg)=>{
     const id = msg.chat.id;
