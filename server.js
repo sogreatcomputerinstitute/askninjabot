@@ -520,7 +520,7 @@ bot.onText(/\/genimage (.+)/, async (msg, m) => {
 bot.onText(/\/leaderboard/, (msg) => {
   if (!isVIP(msg.chat.id)) return;
 
-  let text = "🏆 Leaderboard\n";
+  let text = "🏆 Feature Coming Soon....";
   for (let id in dbData.leaderboard) {
     text += `${id}: ${dbData.leaderboard[id]}\n`;
   }
@@ -537,7 +537,7 @@ bot.onText(/\/myskills/, (msg) => {
 bot.onText(/\/setchannel (.+)/, async (msg, m) => {
   if (!isVIP(msg.chat.id)) return;
   dbData.vipChannels[msg.chat.id] = m[1];
-  await db.write();
+  await saveToGist();
   bot.sendMessage(msg.chat.id, "Channel linked");
 });
 
@@ -562,7 +562,33 @@ cron.schedule("0 9,14,20 * * *", async () => {
 
   forwardVIP(post);
 });
+// ============= Manual Api Activation =============
+// ================= New Post =========================
+app.get("/newpost", (req, res) => {
+  const post = await ai("Short trending programming tip with code");
 
+  const img = await createCodeImage(post);
+
+  bot.sendPhoto(MAIN_CHANNEL, img, {
+    caption: "🔥 Daily Coding Tip\n\n" + post
+  });
+
+  forwardVIP(post);
+});
+// ===================== New Challenge ================
+app.get("/newchallenge", (req, res) => {
+  const challenge = await ai("Advanced coding challenge");
+  forwardVIP("🔥 VIP Challenge\n" + challenge);
+})
+
+app.get("/scrape", (req, res) => {
+      dbData.vip.forEach(async id=>{
+        const job = await scrapeFreelanceJob();
+        if(!job) return;
+        const post = await generateJobPost(job.title);
+        bot.sendMessage(id, `💼 VIP Job Alert:\n${post}\nApply: ${job.link}`);
+    });
+})
 // ================== VIP CHALLENGE ==================
 cron.schedule("0 19 * * *", async () => {
   const challenge = await ai("Advanced coding challenge");
