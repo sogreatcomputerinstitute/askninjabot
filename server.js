@@ -122,7 +122,7 @@ async function ai(prompt) {
 
     } catch (error) {
       // 429 = Quota, 404 = Not Found, 503 = Overloaded
-      if (error.status === 429 || error.status === 404 || error.status === 503 error.status === 400) {
+      if (error.status === 429 || error.status === 404 || error.status === 503 || error.status === 400) {
         console.warn(`⚠️ ${modelName} unavailable. Switching paths...`);
         continue; 
       }
