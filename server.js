@@ -265,7 +265,7 @@ async function isVIP(id) {
 
 // ================== IMAGE GENERATOR ==================
 async function createCodeImage(code, file = "code.png") {
-  const file = await generateBrandImage();
+  file = await generateBrandImage();
   return file;
 }
 
