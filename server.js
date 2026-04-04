@@ -587,12 +587,12 @@ app.get("/newpost", async(req, res) => {
   forwardVIP(post);
 });
 // ===================== New Challenge ================
-app.get("/newchallenge", (req, res) => {
+app.get("/newchallenge", async(req, res) => {
   const challenge = await ai("Advanced coding challenge");
   forwardVIP("🔥 VIP Challenge\n" + challenge);
 })
 
-app.get("/scrape", (req, res) => {
+app.get("/scrape", async(req, res) => {
       dbData.vip.forEach(async id=>{
         const job = await scrapeFreelanceJob();
         if(!job) return;
