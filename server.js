@@ -23,7 +23,20 @@ const MAIN_CHANNEL = "@ask_ninja";
 const app = express();
 app.use(express.json());
 
-const bot = new TelegramBot(TOKEN, { polling: true });
+// Your Render URL (e.g., https://your-app-name.onrender.com)
+const url = process.env.RENDER_EXTERNAL_URL; 
+const port = process.env.PORT || 3000;
+
+// We add the token to the path so only Telegram knows where to send updates
+bot.setWebHook(`${url}/bot${token}`);
+
+// Create the Webhook Route
+app.post(`/bot${token}`, (req, res) => {
+  bot.processUpdate(req.body); // Send the data to your bot.on() listeners
+  res.sendStatus(200);         // Tell Telegram "Got it!"
+});
+
+const bot = new TelegramBot(TOKEN);
 
 // Global DB object
 let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
