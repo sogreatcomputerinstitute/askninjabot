@@ -22,6 +22,7 @@ const GEMINI_KEY = process.env.GEMINI_KEY
 const MAIN_CHANNEL = "@ask_ninja";
 const app = express();
 app.use(express.json());
+const bot = new TelegramBot(TOKEN);
 
 // Your Render URL (e.g., https://your-app-name.onrender.com)
 const url = process.env.RENDER_EXTERNAL_URL; 
@@ -36,7 +37,6 @@ app.post(`/bot${token}`, (req, res) => {
   res.sendStatus(200);         // Tell Telegram "Got it!"
 });
 
-const bot = new TelegramBot(TOKEN);
 
 // Global DB object
 let dbData = { vip: [], vipKeys: [], users: {}, leaderboard: {}, vipChannels: {} };
