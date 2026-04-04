@@ -16,6 +16,9 @@ require('dotenv').config(); // LOAD THE VAULT FIRST
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GIST_ID = process.env.GIST_ID;
 
+const reportingUsers = new Set();
+const PROF_BRIAN_ID = 8680817767;
+
 // ================== INIT ==================
 const TOKEN = process.env.TOKEN
 const GEMINI_KEY = process.env.GEMINI_KEY
@@ -654,7 +657,40 @@ async function forwardToVIPChannels(message, extraOptions = {}) {
         }
     }
 }
+// ========================== BUG ================ 
+bot.onText(/\/report/, (msg) => {
+  const chatId = msg.chat.id;
+  reportingUsers.add(chatId); // Mark this user as "Reporting"
+  
+  bot.sendMessage(chatId, "🥷 *NINJA LOG:* Please write your bug report below. Describe the issue in detail, Prof. Brian.", { parse_mode: 'Markdown' });
 
+  bot.once('message', (msg) => {
+  const chatId = msg.chat.id;
+  const text = msg.text;
+
+  // Ignore if the message is a command (starts with /)
+  if (text && text.startsWith('/')) return;
+
+  // Check if this user is currently in "Reporting Mode"
+  if (reportingUsers.has(chatId)) {
+    // A. Send a copy to YOU (Prof. Brian)
+    const reportTemplate = `
+🚨 *NEW BUG REPORT* 🚨
+👤 *From:* ${msg.from.first_name} (@${msg.from.username || 'N/A'})
+🆔 *User ID:* ${chatId}
+📝 *Report:* ${text}
+    `;
+    
+    bot.sendMessage(PROF_BRIAN_ID, reportTemplate, { parse_mode: 'Markdown' });
+
+    // B. Thank the user and remove them from the reporting list
+    bot.sendMessage(chatId, "✅ *NINJA STATUS:* Thanks for the feedback! Your report has been delivered to the master headquarters.", { parse_mode: 'Markdown' });
+    
+    reportingUsers.delete(chatId); // Close the report state
+  }
+});
+  
+});
 // ================== START ==================
 app.listen(3000);
 console.log("🚀 BOT RUNNING");
