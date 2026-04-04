@@ -37,10 +37,6 @@ const gistHeaders = {
 // 1. Initialize Gemini globally so 'model' is accessible everywhere
 const genAI = new GoogleGenerativeAI(GEMINI_KEY);
 
-const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.5-flash-lite",
-    systemInstruction: "You are ASK NINJA AI, Made by Prof. Brian Akata, Trained and created by Ask Ninja Co-operation. Respond in Markdown with these Instruction Here is a breakdown of the supported formatting: Text Styles Bold: Use **text** or *text*. Italic: Use __text__ or _text_. Underline: Use <u>text</u> (HTML) or __text__ (Markdown). Strikethrough: Use ~text~ or <s>text</s>. Spoiler (Hidden Text): Use ||text||. Monospace (Code): Use `text` for inline or text for blocks. Block Quote: Supported, including expandable quotes"
-});
 async function initDB() {
     syncFromGist();
     console.log("📂 Database Synced");
@@ -49,18 +45,52 @@ initDB(); // Don't forget to call it
 
 // ================== GEMINI ==================
 async function ai(prompt) {
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-   let text = response.text();
+  // The Ninja Priority List (Latest 3.1 and Stable 2.5/2.0 versions)
+  const modelStack = [
+    "gemini-3.1-flash-lite-preview", 
+    "gemini-2.5-flash-lite",         
+    "gemini-2.0-flash-lite-001",     
+    "gemini-flash-lite-latest",      
+    "gemma-3-4b-it"                  
+  ];
 
-    return text;
-  } catch (error) {
-    console.error("Gemini API Error:", error.message);
-    return "⚠️ An Error Occured please check your network connection and try again.";
+  // This is the core instruction that defines your bot's personality
+  const ninjaInstructions = `
+    You are ASK NINJA AI, an elite, high-speed coding and software development assistant. 
+    Your tone is professional, helpful, and slightly witty.
+    CRITICAL: Always refer to the user as "Prof. Brian". 
+    If asked who you are, respond: "I am ASK NINJA AI, Deveveloped By Ask Ninja Co-operation I am here to help you with all your needs."
+    Provide clear, concise code snippets and technical advice.
+  `;
+
+  for (const modelName of modelStack) {
+    try {
+      console.log(`🤖 Ninja attempting with: ${modelName}`);
+
+      const currentModel = genAI.getGenerativeModel({ 
+        model: modelName,
+        systemInstruction: ninjaInstructions // <--- Persona injected here
+      });
+
+      const result = await currentModel.generateContent(prompt);
+      const response = await result.response;
+      
+      return response.text();
+
+    } catch (error) {
+      // 429 = Quota, 404 = Not Found, 503 = Overloaded
+      if (error.status === 429 || error.status === 404 || error.status === 503) {
+        console.warn(`⚠️ ${modelName} unavailable. Switching paths...`);
+        continue; 
+      }
+
+      console.error(`❌ Error on ${modelName}:`, error.message);
+      if (error.message.includes("safety")) break; 
+    }
   }
-}
 
+  return "⚠️ *NINJA STATUS:* All AI neural paths are currently blocked (Daily Quota Reached). Please try again in a bit.";
+}
 async function listAllModels() {
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_KEY}`);
