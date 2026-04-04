@@ -90,6 +90,27 @@ async function initDB() {
 }
 initDB(); // Don't forget to call it
 
+// =================== KEYBOARD (MENU BUTTONS) ======================
+// Registering the Ninja Command Menubot.setMyCommands([
+    { command: 'start', description: '⚡ Start' },
+    { command: 'generate', description: '🎨 Generate Code' },
+    { command: 'refactor', description: '🔧 Clean Your Code' },
+    { command: 'bugbuster', description: '🕵️ Debug Logs' },
+    { command: 'roadmap', description: '🗺️ Dev Roadmaps' },
+    { command: 'tutorials', description: '📚 Learn Skills' },
+    { command: 'templates', description: '📄 Code Blueprints' },
+    { command: 'check', description: '🌐 Website Uptime' },
+    { command: 'time', description: '🕒 AI Time Format' },
+    { command: 'repo', description: '📦 Github Linker' },
+    { command: 'sensei', description: '🍱 Format Syntax' },
+    { command: 'slugger', description: '🔗 URL Slugger' },
+    { command: 'setchannel', description: '🔐 VIP Channel Setup' },
+    { command: 'quote', description: '🌙 Ninja Wisdom' },
+    { command: 'help', description: '📜 Mission Manual' }
+]).then(() => {
+    console.log("🥷 NINJA LOG: Full Arsenal Synchronized!");
+});
+
 // ================== GEMINI ==================
 async function ai(prompt) {
   // The Ninja Priority List (Latest 3.1 and Stable 2.5/2.0 versions)
