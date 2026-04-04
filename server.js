@@ -575,7 +575,7 @@ cron.schedule("0 9,14,20 * * *", async () => {
 });
 // ============= Manual Api Activation =============
 // ================= New Post =========================
-app.get("/newpost", (req, res) => {
+app.get("/newpost", async(req, res) => {
   const post = await ai("Short trending programming tip with code");
 
   const img = await createCodeImage(post);
