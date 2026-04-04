@@ -265,19 +265,7 @@ async function isVIP(id) {
 
 // ================== IMAGE GENERATOR ==================
 async function createCodeImage(code, file = "code.png") {
-  const svg = `
-  <svg width="1000" height="600">
-    <style>
-      .bg { fill: #0f172a; }
-      .txt { fill: #ffffff; font-size: 18px; font-family: monospace; white-space: pre; }
-    </style>
-    <rect width="100%" height="100%" class="bg"/>
-    <text x="20" y="50" class="txt">
-${code.replace(/&/g, "&amp;").replace(/</g, "&lt;")}
-    </text>
-  </svg>`;
-
-  await sharp(Buffer.from(svg)).png().toFile(file);
+  const file = await generateBrandImage();
   return file;
 }
 
