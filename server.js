@@ -106,7 +106,9 @@ initDB(); // Don't forget to call it
     { command: 'slugger', description: '🔗 URL Slugger' },
     { command: 'setchannel', description: '🔐 VIP Channel Setup' },
     { command: 'quote', description: '🌙 Ninja Wisdom' },
-    { command: 'help', description: '📜 Mission Manual' }
+    { command: 'debug', description: '🪲 Run System Diagnostics' },
+    { command: 'cheatsheets', description: '📜 Quick Dev Syntax' }
+//    { command: 'help', description: '📜 Mission Manual' }
 ]).then(() => {
     console.log("🥷 NINJA LOG: Full Arsenal Synchronized!");
 });
