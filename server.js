@@ -29,10 +29,10 @@ const url = process.env.RENDER_EXTERNAL_URL;
 const port = process.env.PORT || 3000;
 
 // We add the token to the path so only Telegram knows where to send updates
-bot.setWebHook(`${url}/bot${token}`);
+bot.setWebHook(`${url}/bot${TOKEN}`);
 
 // Create the Webhook Route
-app.post(`/bot${token}`, (req, res) => {
+app.post(`/bot${TOKEN}`, (req, res) => {
   bot.processUpdate(req.body); // Send the data to your bot.on() listeners
   res.sendStatus(200);         // Tell Telegram "Got it!"
 });
