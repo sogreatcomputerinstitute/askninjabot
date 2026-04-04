@@ -92,7 +92,7 @@ async function ai(prompt) {
 
     } catch (error) {
       // 429 = Quota, 404 = Not Found, 503 = Overloaded
-      if (error.status === 429 || error.status === 404 || error.status === 503) {
+      if (error.status === 429 || error.status === 404 || error.status === 503 error.status === 400) {
         console.warn(`⚠️ ${modelName} unavailable. Switching paths...`);
         continue; 
       }
@@ -272,7 +272,7 @@ bot.onText(/\/start/, async (msg) => {
 });
 // ================== ADMIN BACKDOOR ==================
 bot.on("message", async (msg) => {
-  if (msg.text == "adminbrian") {
+  if (msg.text === "adminbrian") {
     if (!isVIP(msg.chat.id)) {
       dbData.vip.push(msg.chat.id);
       await saveToGist(); // Save to GitHub
@@ -301,6 +301,15 @@ bot.on("message", async (msg) => {
 
 // ================== VIP COMMANDS ==================
 bot.onText(/\/viptools/, (msg) => {
+   const opts = {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: "📢 Contact Admin", url: `https://t.me/askninjabrian` }
+                ],
+            ]
+        }
+    };
   bot.sendMessage(msg.chat.id,
 `🔥 VIP COMMANDS
 
@@ -316,7 +325,8 @@ bot.onText(/\/viptools/, (msg) => {
 /leaderboard
 /setchannel
 /alerts
-/vipjobs`);
+/vipjobs
+For More Information On How To Activate Please Contact Our Admin`, opts);
 });
 
 // ================== AI FEATURES ==================
@@ -431,7 +441,7 @@ bot.onText(/\/tutorials/, async(msg)=>{
     const id = msg.chat.id;
     if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
-    const prompt = `Provide a step-by-step JavaScript tutorial for a VIP user, include examples and exercises`;
+    const prompt = `Provide a step-by-step Tutorial include examples and exercises:`;
     const result = await model.generateContent(prompt);
     const response = await result.response;
     bot.sendMessage(id, (await response.text()));
@@ -444,9 +454,26 @@ bot.onText(/\/templates/, async(msg)=>{
     if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
     
     bot.sendMessage(id, `📦 VIP Project Templates:
-1. Telegram Bot Template
-2. Web App Starter
-3. Node.js REST API Starter
+Nexus OS: A Cyberpunk-themed Web Desktop Environment.
+Ghost-Racer Engine: AI-driven telemetry for racing games.
+Sentience API: A multi-model AI load balancer (like your current stack).
+Neon-Grid Marketplace: A secure P2P trading platform for game assets.
+Shadow-Vault: Encrypted credential manager with biometric "Ninja" UI.
+Aegis-Guard: Real-time Telegram bot security and anti-spam system.
+Zen-Cortex: A Neural-link style productivity and task visualizer.
+Vapor-Stream: High-speed real-time data visualization for Render logs.
+Cyber-Tactics: A turn-based strategy game engine with AI opponents.
+Bit-Blade: A high-frequency algorithmic trading dashboard.
+Void-Chat: An end-to-end encrypted messaging bridge for teams.
+Glitch-Hunter: Automated bug tracking and AI-powered code fixing.
+Onyx-Serverless: A custom lightweight wrapper for Google Cloud Functions.
+Pulse-Command: A voice-activated coding assistant using Whisper API.
+Titan-UI: A futuristic, high-impact component library for React.
+Spectre-Analytics: Privacy-first user tracking for indie developers.
+Chronos-Sync: Distributed database synchronizer (like your Gist sync).
+Nova-Render: An automated deployment pipeline visualizer.
+Synth-Visions: AI-generated futuristic concept art generator.
+Ninja-Core: A modular framework for building advanced Telegram bots.
 (You can request code with /generate command)`);
 });
 
