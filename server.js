@@ -513,28 +513,9 @@ bot.onText(/\/cheatsheets/, async(msg)=>{
     const id = msg.chat.id;
     if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
-    bot.sendMessage(id, "1	Python	python.org
-2	JavaScript	javascript.com
-3	TypeScript	typescriptlang.org
-4	Rust	rust-lang.org
-5	Go (Golang)	go.dev
-6	Java	oracle.com/java
-7	C#	dotnet.microsoft.com
-8	C++	isocpp.org
-9	Kotlin	kotlinlang.org
-10	Swift	swift.org
-11	PHP	php.net
-12	Ruby	ruby-lang.org
-13	Dart	dart.dev
-14	SQL	iso.org/standard/63343.html (Standard)
-15	R	r-project.org
-16	Scala	scala-lang.org
-17	Julia	julialang.org
-18	Lua	lua.org
-19	Elixir	elixir-lang.org
-20	Zig	ziglang.org");
+    bot.sendMessage(id, "1	Python - python.org \n 2	JavaScript - javascript.com /n 3	TypeScript - typescriptlang.org \n 4	Rust - rust-lang.org \n 5	Go (Golang) - go.dev \n 6	Java - oracle.com/java /n 7	C# - dotnet.microsoft.com /n 8	C++ - isocpp.org \n 9	Kotlin - kotlinlang.org \n 10	Swift - swift.org \n 11	PHP - php.net \n 12	Ruby - ruby-lang.org \n 13 Dart - dart.dev /n 14	SQL - iso.org/standard/63343.html (Standard) 15	/n R - r-project.org \n 16	Scala - scala-lang.org \n 17	Julia - julialang.org \n 18	Lua - lua.org \n 19.	Elixir - elixir-lang.org \n 20.	Zig - ziglang.org");
 });
-1
+
 // ================== IMAGE FEATURE ==================
 bot.onText(/\/genimage (.+)/, async (msg, m) => {
   if (!isVIP(msg.chat.id)) return;
