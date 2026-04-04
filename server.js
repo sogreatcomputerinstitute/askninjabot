@@ -91,7 +91,8 @@ async function initDB() {
 initDB(); // Don't forget to call it
 
 // =================== KEYBOARD (MENU BUTTONS) ======================
-// Registering the Ninja Command Menubot.setMyCommands([
+// Registering the Ninja Command Menu
+bot.setMyCommands([
     { command: 'start', description: '⚡ Start' },
     { command: 'generate', description: '🎨 Generate Code' },
     { command: 'refactor', description: '🔧 Clean Your Code' },
