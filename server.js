@@ -804,7 +804,7 @@ bot.onText(/\/repo (.+)/, (msg, match) => {
 });
 
 bot.onText(/\/quote/, (msg) => {
-   if (text === '/quote') {
+   if (msg === '/quote') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         return bot.sendMessage(chatId, `🌙 *NINJA WISDOM*\n\n_"${randomQuote}"_`, { parse_mode: 'Markdown' });
     }
