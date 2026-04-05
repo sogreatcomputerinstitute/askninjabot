@@ -405,9 +405,9 @@ Answer this question in markdown format:
 ${msg.text}
 `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const answer = response.text();
+        const result = await ai(prompt);
+        const response = result;
+        const answer = response;
 
         bot.sendMessage(id, answer, {parse_mode: 'Markdown'});
 
@@ -428,9 +428,9 @@ bot.onText(/\/generate/, async (msg) => {
     bot.once("message", async (descMsg) => {
         if(!dbData.vip.includes(id)) return;
         const prompt = `${descMsg.text}`;
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        bot.sendMessage(id, (await response.text()));
+        const result = await ai(prompt);
+        const response = result;
+        bot.sendMessage(id, response);
     });
 });
 
