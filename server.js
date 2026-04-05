@@ -353,7 +353,7 @@ bot.onText(/\/viptools/, (msg) => {
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: "📢 Contact Admin", url: `https://t.me/askninjabrian` }
+                    { text: "📢 Contact Admin", url: `https://t.me/brianaskninja` }
                 ],
             ]
         }
@@ -401,7 +401,7 @@ bot.on("message", async (msg) => {
         const prompt = `
 You are a friendly coding teacher.
 Explain simply with examples.
-Answer this question from a VIP user:
+Answer this question in markdown format:
 ${msg.text}
 `;
 
@@ -409,7 +409,7 @@ ${msg.text}
         const response = await result.response;
         const answer = response.text();
 
-        bot.sendMessage(id, answer);
+        bot.sendMessage(id, answer, {parse_mode: 'Markdown'});
 
     } catch (e) {
         bot.sendMessage(id, "⚠️ AI error, please try again.", e);
