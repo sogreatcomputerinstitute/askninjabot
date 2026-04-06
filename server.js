@@ -694,30 +694,7 @@ bot.onText(/\/askadmin/, async(msg)=>{
 
 
     
-// ========================== Forward to VIP ======================
-async function forwardToVIPChannels(message, extraOptions = {}) {
-    if(!dbData.vipChannels) return;
 
-    for(const vipId in dbData.vipChannels){
-        const channel = dbData.vipChannels[vipId];
-        try {
-            // Forward text message
-            if(message.text){
-                bot.sendMessage(channel, message.text, extraOptions);
-            }
-            // Forward photo/image
-            if(message.photo){
-                bot.sendPhoto(channel, message.photo, extraOptions);
-            }
-            // Forward quiz/poll
-            if(message.poll){
-                bot.sendPoll(channel, message.poll.question, message.poll.options, extraOptions);
-            }
-        } catch(e){
-            console.log(`Error forwarding to ${channel}:`, e.message);
-        }
-    }
-}
 // ========================== BUG ================ 
 bot.onText(/\/report/, (msg) => {
   const chatId = msg.chat.id;
