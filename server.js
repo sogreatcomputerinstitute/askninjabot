@@ -565,14 +565,21 @@ bot.onText(/\/myskills/, (msg) => {
 // ================== VIP CHANNEL LINK ==================
 bot.onText(/\/setchannel/, async (msg) => {
   if (!isVIP(msg.chat.id)) return;
-  bot.sendMessage(msg.chat.id, "Send Your Channel Link To Get Daily Post!");
-    
-    bot.once('message', async(nmsg) => {
-      dbData.vipChannels[msg.chat.id] = m[1];
-      await saveToGist();
-      bot.sendMessage(msg.chat.id, "Channel Linked Please Make The Bot An Admin In /n Your Channel For It To Function Properly!");
-    })
-    
+
+  bot.sendMessage(msg.chat.id, "Send your channel link to get daily posts!");
+
+  bot.once('message', async (nmsg) => {
+    if (nmsg.chat.id !== msg.chat.id) return;
+
+    dbData.vipChannels[msg.chat.id] = nmsg.text;
+
+    await saveToGist();
+
+    bot.sendMessage(
+      msg.chat.id,
+      "Channel linked successfully!\nMake the bot an admin in your channel for it to function properly!"
+    );
+  });
 });
 
 // ================== FORWARD ==================
