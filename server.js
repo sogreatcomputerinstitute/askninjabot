@@ -593,15 +593,23 @@ async function forwardVIP(text) {
 
 // ================== AUTO POSTS ==================
 cron.schedule("0 9,14,20 * * *", async () => {
-  const post = await ai("Short programming tip with code");
+  try {
+    const post = await ai("Short trending programming tip with code");
 
-  const img = await createCodeImage(post);
+    const img = await generateBrandImage("Daily Tech News!");
 
-  bot.sendPhoto(MAIN_CHANNEL, img, {
-    caption: "🔥 Daily Coding Tip\n\n" + post
-  });
+    await bot.sendPhoto(MAIN_CHANNEL, img, {
+        parse_mode: 'Markdown',
+      caption: "🔥 Daily Coding Tip\n\n" + post
+    });
 
-  forwardVIP(post);
+    await forwardVIP(post);
+
+    res.send("Post sent successfully ✅");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating post ❌");
+  }
 });
 // ============= Manual Api Activation =============
 // ================= New Post =========================
@@ -612,6 +620,7 @@ app.get("/newpost", async (req, res) => {
     const img = await generateBrandImage("Daily Tech News!");
 
     await bot.sendPhoto(MAIN_CHANNEL, img, {
+        parse_mode: 'Markdown',
       caption: "🔥 Daily Coding Tip\n\n" + post
     });
 
