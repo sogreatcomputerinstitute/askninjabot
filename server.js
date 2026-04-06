@@ -661,7 +661,6 @@ bot.onText(/\/job/, async(msg) => {
         }
     };
         bot.sendMessage(id, `💼 VIP Job:\n${post}\n`, opts); 
-    return "${posts}, Apply: ${job.link}";
 })
 // ====================== ASK ADMIN ============================
 bot.onText(/\/askadmin/, async(msg)=>{
@@ -670,18 +669,8 @@ bot.onText(/\/askadmin/, async(msg)=>{
     bot.sendMessage(id,"💬 Send your question and the admin will respond shortly.");
 });
 
-// ----- Step 1: Set VIP Channel -----
-bot.onText(/\/setchannel (.+)/, async (msg, match) => {
-    const id = msg.chat.id;
-    if(!dbData.vip.includes(id)) return bot.sendMessage(id,"❌ VIP only feature.");
 
-    const channel = match[1].trim(); // Example: @mychannel
-    dbData.vipChannels ||= {};
-    dbData.vipChannels[id] = channel;
-    await db.write();
-
-    bot.sendMessage(id, `✅ Your channel ${channel} is now linked. All posts and quizzes will be forwarded here.`);
-});
+    
 // ========================== Forward to VIP ======================
 async function forwardToVIPChannels(message, extraOptions = {}) {
     if(!dbData.vipChannels) return;
@@ -748,7 +737,7 @@ bot.onText(/\/sensei/, (msg) => {
     
     bot.once('message', (nextMsg) => {
         if (nextMsg.text.startsWith('/')) return; // Ignore if user types another command
-        const formatted = "```javascript\n" + nextMsg.text + "\n```";
+        const formatted = "```code\n" + nextMsg.text + "\n```";
         bot.sendMessage(chatId, `✨ *FORMATTED BY SENSEI:*\n${formatted}`, { parse_mode: 'MarkdownV2' });
     });
 });
