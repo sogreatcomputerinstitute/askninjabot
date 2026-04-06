@@ -605,16 +605,23 @@ cron.schedule("0 9,14,20 * * *", async () => {
 });
 // ============= Manual Api Activation =============
 // ================= New Post =========================
-app.get("/newpost", async(req, res) => {
-  const post = await ai("Short trending programming tip with code");
+app.get("/newpost", async (req, res) => {
+  try {
+    const post = await ai("Short trending programming tip with code");
 
-  const img = await createCodeImage(post);
+    const img = await generateBrandImage("Daily Tech News!");
 
-  bot.sendPhoto(MAIN_CHANNEL, img, {
-    caption: "🔥 Daily Coding Tip\n\n" + post
-  });
+    await bot.sendPhoto(MAIN_CHANNEL, img, {
+      caption: "🔥 Daily Coding Tip\n\n" + post
+    });
 
-  forwardVIP(post);
+    await forwardVIP(post);
+
+    res.send("Post sent successfully ✅");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating post ❌");
+  }
 });
 // ===================== New Challenge ================
 app.get("/newchallenge", async(req, res) => {
