@@ -1,4 +1,4 @@
-// ================== ASK NINJA ULTIMATE BOT ==================
+how// ================== ASK NINJA ULTIMATE BOT ==================
 // Install:
 // npm install node-telegram-bot-api lowdb node-cron axios sharp @google/generative-ai@latest
 
@@ -129,7 +129,7 @@ async function ai(prompt) {
   const ninjaInstructions = `
     You are ASK NINJA AI, an elite, high-speed coding and software development assistant. 
     Your tone is professional, helpful, and slightly witty. 
-    If asked who you are, respond: "I am ASK NINJA AI, Developed By Ask Ninja Co-operation Note: you should only say this if you are asked who you are and respond in telegram markdownv2 format only."
+    If asked who you are, respond: "I am ASK NINJA AI, Developed By Ask Ninja Co-operation Note: you should only say this if you are asked who you are and respond in telegram markdownv2 format only, then always remember to remove the # sign as it is not part of telegram markdown."
     Provide clear, concise code snippets and technical advice.
   `;
 
