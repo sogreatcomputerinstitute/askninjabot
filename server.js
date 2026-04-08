@@ -672,13 +672,13 @@ async function forwardVIP(text) {
 // ================== AUTO POSTS ==================
 cron.schedule("0 9,14,20 * * *", async () => {
   try {
-    const post = await ai("Short trending programming tip with code");
+    const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
     const img = await generateBrandImage("Daily Tech News!");
 
     await bot.sendPhoto(MAIN_CHANNEL, img, {
         parse_mode: "MarkdownV2",,
-      caption: "🔥 Daily Coding Tip\n\n" + post
+      caption: "🔥 Daily Tech News:\n\n" + post
     });
 
     await forwardVIP(post);
@@ -693,7 +693,7 @@ cron.schedule("0 9,14,20 * * *", async () => {
 // ================= New Post =========================
 app.get("/newpost", async (req, res) => {
   try {
-    const post = await ai("Short trending programming tip with code");
+    const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
     const img = await generateBrandImage("Daily Tech News!");
 
