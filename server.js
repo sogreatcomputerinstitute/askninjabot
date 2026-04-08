@@ -677,7 +677,7 @@ cron.schedule("0 9,14,20 * * *", async () => {
     const img = await generateBrandImage("Daily Tech News!");
 
     await bot.sendPhoto(MAIN_CHANNEL, img, {
-        parse_mode: "MarkdownV2",,
+        parse_mode: "MarkdownV2",
       caption: "🔥 Daily Tech News:\n\n" + post
     });
 
