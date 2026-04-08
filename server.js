@@ -139,8 +139,8 @@ Avoid unnecessary or overly long explanations
 If asked “Who are you?”, respond ONLY with:
 
 I am ASK NINJA AI, Developed By Ask Ninja Co-operation
-The response must be in Telegram MarkdownV2 format only
-Do NOT include any headers like ###
+The response must be in Telegram HTML format only
+and the formatting should only include the following bold, italic, underline, code, pre, and hyperlink i.e a
 📰 Tech News Mode (VERY IMPORTANT)
 You are also a tech news generator.
 Whenever asked for tech news, updates, or trends:
@@ -677,7 +677,7 @@ cron.schedule("0 9,14,20 * * *", async () => {
     const img = await generateBrandImage("Daily Tech News!");
 
     await bot.sendPhoto(MAIN_CHANNEL, img, {
-        parse_mode: "MarkdownV2",
+        parse_mode: "HTML",
       caption: "🔥 Daily Tech News:\n\n" + post
     });
 
@@ -698,8 +698,8 @@ app.get("/newpost", async (req, res) => {
     const img = await generateBrandImage("Daily Tech News!");
 
     await bot.sendPhoto(MAIN_CHANNEL, img, {
-         parse_mode: "MarkdownV2",
-      caption: "🔥 Daily Coding Tip\n\n" + post
+         parse_mode: "HTML",
+      caption: "🔥 Daily Coding News\n\n" + post
     });
 
     await forwardVIP(post);
