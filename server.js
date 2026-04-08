@@ -371,36 +371,33 @@ async function createCodeImage(code, file = "code.png") {
 }
 
 bot.onText(/\/start/, async (msg) => {
-    // 1. Define chatId immediately using the msg object
-    const chatId = msg.chat.id; 
-    
+    const chatId = msg.chat.id;
+
     try {
+        // Check subscription
         const isSubscribed = await checkSubscription(msg.from.id);
         const imageBuffer = await generateBrandImage("Welcome To Ask Ninja Bot!");
-        
+
         if (!isSubscribed) {
-            return sendJoinMessage(chatId); // Use the variable here
+            return sendJoinMessage(chatId);
         }
 
-        const startMsg = `🔥 *Welcome to Ask Ninja AI* \n\nWelcome To, Ask Ninja! I am your advanced AI coding companion...`;
-        
+        const startMsg = `🔥 *Welcome to Ask Ninja AI*\n\nWelcome To Ask Ninja! I am your advanced AI coding companion...`;
+
         await bot.sendPhoto(chatId, imageBuffer, {
             caption: startMsg,
-            parse_mode: 'Markdown'
+            parse_mode: 'Markdown', // ✅ Comma added
             reply_markup: {
-      keyboard: [
-        ["/start", "/debug"]
-      ],
-      resize_keyboard: true,
-      one_time_keyboard: false
-    }
-  });
+                keyboard: [
+                    ["/start", "/debug"]
+                ],
+                resize_keyboard: true,
+                one_time_keyboard: false
+            }
         });
-        
+
     } catch (err) {
         console.log("Start Error:", err);
-        // 3. Send a simple hardcoded string in the catch block 
-        // to avoid "startMsg is not defined" errors here.
         bot.sendMessage(chatId, "⚠️ Oops! Something went wrong. Try again in a moment.");
     }
 });
