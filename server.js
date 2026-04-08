@@ -387,6 +387,14 @@ bot.onText(/\/start/, async (msg) => {
         await bot.sendPhoto(chatId, imageBuffer, {
             caption: startMsg,
             parse_mode: 'Markdown'
+            reply_markup: {
+      keyboard: [
+        ["/start", "/debug"]
+      ],
+      resize_keyboard: true,
+      one_time_keyboard: false
+    }
+  });
         });
         
     } catch (err) {
