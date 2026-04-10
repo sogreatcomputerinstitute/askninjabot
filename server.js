@@ -690,11 +690,11 @@ cron.schedule("0 9,14,20 * * *", async () => {
     await bot.sendPhoto(MAIN_CHANNEL, img);
 
        // 2️⃣ Send full post as a separate message
-    await bot.sendMessage(MAIN_CHANNEL, safePost, {
-      parse_mode: "Markdown"
+    await bot.sendMessage(MAIN_CHANNEL, post, {
+      parse_mode: "markdown"
     });
       
-    await forwardVIP(safePost);
+    await forwardVIP(post);
 
     res.send("Post sent successfully ✅");
   } catch (err) {
@@ -715,11 +715,11 @@ app.get("/newpost", async (req, res) => {
     await bot.sendPhoto(MAIN_CHANNEL, img);
 
        // 2️⃣ Send full post as a separate message
-    await bot.sendMessage(MAIN_CHANNEL, safePost, {
-      parse_mode: "Markdown"
+    await bot.sendMessage(MAIN_CHANNEL, post, {
+      parse_mode: "markdown"
     });
       
-    await forwardVIP(safePost);
+    await forwardVIP(post);
 
     res.send("Post sent successfully ✅");
   } catch (err) {
