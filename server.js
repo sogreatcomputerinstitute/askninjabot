@@ -680,14 +680,12 @@ cron.schedule("0 9,14,20 * * *", async () => {
     const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
     const img = await generateBrandImage("Daily Tech News!");
-    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+//    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       
-    await bot.sendPhoto(MAIN_CHANNEL, img, {
-         caption: "🔥 Daily Coding News",
-    });
+    await bot.sendPhoto(MAIN_CHANNEL, img);
 
        // 2️⃣ Send full post as a separate message
-    await bot.sendMessage(MAIN_CHANNEL, safePost, {
+    await bot.sendMessage(MAIN_CHANNEL, post, {
       parse_mode: "HTML"
     });
       
@@ -706,11 +704,9 @@ app.get("/newpost", async (req, res) => {
     const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
     const img = await generateBrandImage("Daily Tech News!");
-    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+//    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       
-    await bot.sendPhoto(MAIN_CHANNEL, img, {
-         caption: "🔥 Daily Coding News",
-    });
+    await bot.sendPhoto(MAIN_CHANNEL, img);
 
        // 2️⃣ Send full post as a separate message
     await bot.sendMessage(MAIN_CHANNEL, safePost, {
