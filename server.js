@@ -139,7 +139,7 @@ Avoid unnecessary or overly long explanations
 If asked “Who are you?”, respond ONLY with:
 
 I am ASK NINJA AI, Developed By Ask Ninja Co-operation
-The response must be in Telegram HTML format only
+The response must be in Telegram Markdownv2 format only
 and the formatting should only include the following bold, italic, underline, code, pre, and hyperlink i.e a
 📰 Tech News Mode (VERY IMPORTANT)
 You are also a tech news generator.
@@ -669,9 +669,13 @@ bot.onText(/\/setchannel/, async (msg) => {
 async function forwardVIP(text) {
   for (let id in dbData.vipChannels) {
     try {
-      bot.sendMessage(dbData.vipChannels[id], text, {parse_mode: "HTML",});
+      bot.sendMessage(dbData.vipChannels[id], text, {parse_mode: "MarkdownV2",});
     } catch {}
   }
+}
+
+function escapeMarkdown(text) {
+  return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, "\\$1");
 }
 
 // ================== AUTO POSTS ==================
@@ -679,14 +683,15 @@ cron.schedule("0 9,14,20 * * *", async () => {
  try {
     const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
+     const safePost = escapeMarkdown(post);
     const img = await generateBrandImage("Daily Tech News!");
 //    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       
     await bot.sendPhoto(MAIN_CHANNEL, img);
 
        // 2️⃣ Send full post as a separate message
-    await bot.sendMessage(MAIN_CHANNEL, post, {
-      parse_mode: "HTML"
+    await bot.sendMessage(MAIN_CHANNEL, safePost, {
+      parse_mode: "MarkdownV2"
     });
       
     await forwardVIP(safePost);
@@ -703,6 +708,7 @@ app.get("/newpost", async (req, res) => {
   try {
     const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
+      const safePost = escapeMarkdown(post);
     const img = await generateBrandImage("Daily Tech News!");
 //    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       
@@ -710,7 +716,7 @@ app.get("/newpost", async (req, res) => {
 
        // 2️⃣ Send full post as a separate message
     await bot.sendMessage(MAIN_CHANNEL, safePost, {
-      parse_mode: "HTML"
+      parse_mode: "MarkdownV2"
     });
       
     await forwardVIP(safePost);
