@@ -669,8 +669,10 @@ bot.onText(/\/setchannel/, async (msg) => {
 async function forwardVIP(text) {
   for (let id in dbData.vipChannels) {
     try {
-      bot.sendMessage(dbData.vipChannels[id], text);
-    } catch {}
+      bot.sendMessage(dbData.vipChannels[id], text, {parse_mode: "HTML",});
+    } catch {
+        console.log("")
+    }
   }
 }
 
