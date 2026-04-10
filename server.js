@@ -691,7 +691,7 @@ cron.schedule("0 9,14,20 * * *", async () => {
 
        // 2️⃣ Send full post as a separate message
     await bot.sendMessage(MAIN_CHANNEL, safePost, {
-      parse_mode: "MarkdownV2"
+      parse_mode: "Markdown"
     });
       
     await forwardVIP(safePost);
@@ -716,7 +716,7 @@ app.get("/newpost", async (req, res) => {
 
        // 2️⃣ Send full post as a separate message
     await bot.sendMessage(MAIN_CHANNEL, safePost, {
-      parse_mode: "MarkdownV2"
+      parse_mode: "Markdown"
     });
       
     await forwardVIP(safePost);
