@@ -16,6 +16,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const { generateBrandImage } = require('./imageEngine.js');
 require('dotenv').config(); // LOAD THE VAULT FIRST
+const upload = multer({ dest: 'uploads/' });
+const multer = require('multer');
+
+const fs = require('fs');
+const path = require('path');
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GIST_ID = process.env.GIST_ID;
