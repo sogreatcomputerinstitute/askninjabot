@@ -678,29 +678,29 @@ function escapeMarkdown(text) {
 }
 
 // ================== AUTO POSTS ==================
-cron.schedule("0 9,14,20 * * *", async () => {
- try {
-    const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
+// cron.schedule("0 9,14,20 * * *", async () => {
+//  try {
+//     const post = await ai("Give me the latest tech news focused on AI, software updates, and AI competition. Format it as a high-quality Telegram post using emojis, clear structure, and hashtags. Make it engaging, modern, and insightful. Include analysis of why the news matters and a short pro insight.");
 
-     const safePost = escapeMarkdown(post);
-    const img = await generateBrandImage("Daily Tech News!");
-//    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+//      const safePost = escapeMarkdown(post);
+//     const img = await generateBrandImage("Daily Tech News!");
+// //    const safePost = post.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       
-    await bot.sendPhoto(MAIN_CHANNEL, img);
+//     await bot.sendPhoto(MAIN_CHANNEL, img);
 
-       // 2️⃣ Send full post as a separate message
-    await bot.sendMessage(MAIN_CHANNEL, post, {
-      parse_mode: "markdown"
-    });
+//        // 2️⃣ Send full post as a separate message
+//     await bot.sendMessage(MAIN_CHANNEL, post, {
+//       parse_mode: "markdown"
+//     });
       
-    await forwardVIP(post);
+//     await forwardVIP(post);
 
-    res.send("Post sent successfully ✅");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error creating post ❌");
-  }
-});
+//     res.send("Post sent successfully ✅");
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Error creating post ❌");
+//   }
+// });
 // ============= Manual Api Activation =============
 // ================= New Post =========================
 app.get("/newpost", async (req, res) => {
@@ -741,20 +741,20 @@ app.get("/scrape", async(req, res) => {
     });
 })
 // ================== VIP CHALLENGE ==================
-cron.schedule("0 19 * * *", async () => {
-  const challenge = await ai("Advanced coding challenge");
-  forwardVIP("🔥 VIP Challenge\n" + challenge);
-});
+// cron.schedule("0 19 * * *", async () => {
+//   const challenge = await ai("Advanced coding challenge");
+//   forwardVIP("🔥 VIP Challenge\n" + challenge);
+// });
 
 // ================== JOB ALERT ==================
-cron.schedule("0 10 * * *", async ()=>{
-    dbData.vip.forEach(async id=>{
-        const job = await scrapeFreelanceJob();
-        if(!job) return;
-        const post = await generateJobPost(job.title);
-        bot.sendMessage(id, `💼 VIP Job Alert:\n${post}\nApply: ${job.link}`);
-    });
-});
+// cron.schedule("0 10 * * *", async ()=>{
+//     dbData.vip.forEach(async id=>{
+//         const job = await scrapeFreelanceJob();
+//         if(!job) return;
+//         const post = await generateJobPost(job.title);
+//         bot.sendMessage(id, `💼 VIP Job Alert:\n${post}\nApply: ${job.link}`);
+//     });
+// });
 
 //=================== VIP CHAT GROUP =========================
 bot.onText(/\/vipchat/, async(msg)=>{
@@ -890,6 +890,56 @@ bot.onText(/\/quote/, (msg) => {
    if (msg === '/quote') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         return bot.sendMessage(chatId, `🌙 *NINJA WISDOM*\n\n_"${randomQuote}"_`, { parse_mode: 'Markdown' });
+    }
+});
+
+app.post('/forwardfeedback', upload.array('images'), async (req, res) => {
+    try {
+        const { description, timestamp } = req.body;
+        const files = req.files;
+
+        console.log(`Received request! Description: "${description}". Found ${files ? files.length : 0} files.`);
+
+        // 1. Send the text description context first
+        const textMessage = `🚨 **Automation Status Update**\n\n**Time:** ${timestamp || new Date().toISOString()}\n**Notes:** ${description}`;
+        await bot.telegram.sendMessage(PROF_BRIAN_ID, textMessage, { parse_mode: 'Markdown' });
+
+        // 2. If files were uploaded, forward them to the user
+        if (files && files.length > 0) {
+            // If there's only 1 image, send it as a single photo
+            if (files.length === 1) {
+                await bot.telegram.sendPhoto(PROF_BRIAN_ID, { source: files[0].path });
+            } 
+            // If there are multiple images, group them cleanly into an album (media group)
+            else {
+                const mediaGroup = files.map(file => ({
+                    type: 'photo',
+                    media: { source: file.path }
+                }));
+                await bot.telegram.sendMediaGroup(PROF_BRIAN_ID, mediaGroup);
+            }
+            console.log('Images successfully forwarded to Telegram.');
+        }
+
+        // 3. Respond to your Puppeteer script so it knows it's safe to clear its local folder
+        res.status(200).json({ success: true, message: 'Data logged and routed to Telegram successfully!' });
+
+    } catch (error) {
+        console.error('Error handling API request:', error);
+        res.status(500).json({ success: false, error: error.message });
+    } finally {
+        // 4. CLEANUP: Delete the temp files created by multer from this API server immediately
+        if (req.files && req.files.length > 0) {
+            req.files.forEach(file => {
+                try {
+                    if (fs.existsSync(file.path)) {
+                        fs.unlinkSync(file.path);
+                    }
+                } catch (err) {
+                    console.error('Failed to clean up temp upload file:', err);
+                }
+            });
+        }
     }
 });
 
