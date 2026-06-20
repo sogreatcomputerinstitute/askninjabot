@@ -5,6 +5,7 @@
 const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
 const { Low } = require("lowdb");
+const multer = require('multer');
 
 const { JSONFile } = require("lowdb/node");
 const sharp = require("sharp");
@@ -17,7 +18,6 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { generateBrandImage } = require('./imageEngine.js');
 require('dotenv').config(); // LOAD THE VAULT FIRST
 const upload = multer({ dest: 'uploads/' });
-const multer = require('multer');
 
 const fs = require('fs');
 const path = require('path');
