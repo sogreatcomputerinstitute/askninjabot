@@ -8,7 +8,7 @@ const { Low } = require("lowdb");
 
 const { JSONFile } = require("lowdb/node");
 const sharp = require("sharp");
-const fs = require("fs");
+
 
 const axios = require("axios");
 const express = require("express");
