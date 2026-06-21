@@ -905,35 +905,84 @@ app.post('/forwardfeedback', upload.array('images'), async (req, res) => {
 
         console.log(`Received request! Description: "${description}". Found ${files ? files.length : 0} files.`);
 
-        // 1. Send the text description context first
-        const textMessage = `🚨 **Automation Status Update**\n\n**Time:** ${timestamp || new Date().toISOString()}\n**Notes:** ${description}`;
-        await bot.telegram.sendMessage(PROF_BRIAN_ID, textMessage, { parse_mode: 'Markdown' });
+        const BOT_TOKEN = process.env.TOKEN;
+        const CHAT_ID = process.env.PROF_BRIAN_ID
 
-        // 2. If files were uploaded, forward them to the user
-        if (files && files.length > 0) {
-            // If there's only 1 image, send it as a single photo
-            if (files.length === 1) {
-                await bot.telegram.sendPhoto(PROF_BRIAN_ID, { source: files[0].path });
-            } 
-            // If there are multiple images, group them cleanly into an album (media group)
-            else {
-                const mediaGroup = files.map(file => ({
-                    type: 'photo',
-                    media: { source: file.path }
-                }));
-                await bot.telegram.sendMediaGroup(PROF_BRIAN_ID, mediaGroup);
-            }
-            console.log('Images successfully forwarded to Telegram.');
+        if (!BOT_TOKEN || !CHAT_ID) {
+            throw new Error("Missing critical environment configurations (BOT_TOKEN or CHAT_ID)");
         }
 
-        // 3. Respond to your Puppeteer script so it knows it's safe to clear its local folder
+        // 1. Send the text description context first via native fetch
+        const textMessage = `🚨 **Automation Status Update**\n\n**Time:** ${timestamp || new Date().toISOString()}\n**Notes:** ${description}`;
+        
+        console.log("Sending text status update via Telegram API...");
+        const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: textMessage,
+                parse_mode: 'Markdown'
+            })
+        });
+
+        if (!textResponse.ok) console.error("Telegram text dispatch failed:", await textResponse.text());
+
+        // 2. If files were uploaded, forward them to the user using native FormData
+        if (files && files.length > 0) {
+            console.log("Preparing media dispatch...");
+
+            // Handling single photo upload
+            if (files.length === 1) {
+                const mediaForm = new FormData();
+                mediaForm.append('chat_id', CHAT_ID);
+                
+                const fileBuffer = fs.readFileSync(files[0].path);
+                const fileBlob = new Blob([fileBuffer], { type: 'image/png' });
+                mediaForm.append('photo', fileBlob, files[0].originalname);
+
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: mediaForm
+                });
+            } 
+            // Handling multi-photo album upload
+            else {
+                const mediaForm = new FormData();
+                mediaForm.append('chat_id', CHAT_ID);
+
+                const mediaArray = [];
+                
+                // Attach each file to the form data with a unique pointer key string
+                files.forEach((file, index) => {
+                    const fileBuffer = fs.readFileSync(file.path);
+                    const fileBlob = new Blob([fileBuffer], { type: 'image/png' });
+                    const attachKey = `photo_${index}`;
+                    
+                    mediaForm.append(attachKey, fileBlob, file.originalname);
+                    mediaArray.push({
+                        type: 'photo',
+                        media: `attach://${attachKey}`
+                    });
+                });
+
+                mediaForm.append('media', JSON.stringify(mediaArray));
+
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, {
+                    method: 'POST',
+                    body: mediaForm
+                });
+            }
+            console.log('Images successfully forwarded to Telegram endpoint.');
+        }
+
         res.status(200).json({ success: true, message: 'Data logged and routed to Telegram successfully!' });
 
     } catch (error) {
         console.error('Error handling API request:', error);
         res.status(500).json({ success: false, error: error.message });
     } finally {
-        // 4. CLEANUP: Delete the temp files created by multer from this API server immediately
+        // 4. CLEANUP: Delete temp files immediately from disk
         if (req.files && req.files.length > 0) {
             req.files.forEach(file => {
                 try {
