@@ -906,7 +906,7 @@ app.post('/forwardfeedback', upload.array('images'), async (req, res) => {
         console.log(`Received request! Description: "${description}". Found ${files ? files.length : 0} files.`);
 
         const BOT_TOKEN = process.env.TOKEN;
-        const CHAT_ID = process.env.PROF_BRIAN_ID
+        const CHAT_ID = PROF_BRIAN_ID
 
         if (!BOT_TOKEN || !CHAT_ID) {
             throw new Error("Missing critical environment configurations (BOT_TOKEN or CHAT_ID)");
