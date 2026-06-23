@@ -111,7 +111,7 @@ bot.setMyCommands([
     { command: 'sensei', description: '🍱 Format Syntax' },
     { command: 'slugger', description: '🔗 URL Slugger' },
     { command: 'setchannel', description: '🔐 VIP Channel Setup' },
-    { command: 'quote', description: '🌙 Ninja Wisdom' },
+    { command: 'getid', description: 'Get Chat ID' },
     { command: 'debug', description: '🪲 Run System Diagnostics' },
     { command: 'cheatsheets', description: '📜 Quick Dev Syntax' }
 //    { command: 'help', description: '📜 Mission Manual' }
@@ -891,7 +891,7 @@ bot.onText(/\/repo (.+)/, (msg, match) => {
     bot.sendMessage(msg.chat.id, `📦 [${repo}](${base})`, { parse_mode: 'Markdown' });
 });
 
-bot.onText(/\/quote/, (msg) => {
+bot.onText(/\/getid/, (msg) => {
    if (msg === '/quote') {
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         return bot.sendMessage(chatId, `🌙 *NINJA WISDOM*\n\n_"${randomQuote}"_`, { parse_mode: 'Markdown' });
