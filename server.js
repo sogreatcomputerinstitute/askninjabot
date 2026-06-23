@@ -898,6 +898,14 @@ bot.onText(/\/quote/, (msg) => {
     }
 });
 
+bot.onText(/\/quote/, (msg) => {
+  // Extract the chat ID from the message context
+    const chatId = ctx.chat.id;
+    
+    // Reply directly to the chat
+     bot.sendMessage(msg.chat.id, `📅 *Your chat id is:* ${chatId}`, { parse_mode: 'Markdown' });
+});
+
 app.post('/forwardfeedback/:telegramid', upload.array('images'), async (req, res) => {
     try {
         const { description, timestamp } = req.body;
